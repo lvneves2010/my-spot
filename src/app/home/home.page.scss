@@ -1,0 +1,61 @@
+.vazio,
+.vaga {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.vazio {
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  text-align: center;
+}
+
+.dica {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.nota {
+  margin: 0;
+  max-width: 300px;
+  font-size: 13px;
+  color: var(--ion-color-medium);
+}
+
+.cartao {
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--ion-color-step-50, rgba(127, 127, 127, 0.08));
+
+  .titulo {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+
+    ion-icon {
+      font-size: 32px;
+      color: var(--ion-color-primary);
+    }
+
+    strong,
+    small {
+      display: block;
+    }
+
+    small {
+      color: var(--ion-color-medium);
+    }
+  }
+}
+
+.acoes {
+  display: flex;
+  justify-content: space-between;
+}

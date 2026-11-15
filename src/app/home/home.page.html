@@ -1,0 +1,79 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>My Spot</ion-title>
+    @if (precisaOpcoesPrivacidade$ | async) {
+      <ion-buttons slot="end">
+        <ion-button (click)="privacidade()" aria-label="Privacidade dos anúncios">
+          <ion-icon slot="icon-only" name="shield-checkmark-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    }
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (vaga(); as vaga) {
+    <section class="vaga">
+      <div class="cartao">
+        <div class="titulo">
+          <ion-icon name="car-sport"></ion-icon>
+          <div>
+            <strong>Seu carro está marcado</strong>
+            <small>{{ tempoEstacionado() }} · {{ horaMarcada() }} · GPS ±{{ vaga.precisao }} m</small>
+          </div>
+        </div>
+        <ion-textarea
+          label="Anotação (piso, vaga, referência)"
+          labelPlacement="floating"
+          fill="outline"
+          [autoGrow]="true"
+          [maxlength]="200"
+          placeholder="Ex.: Piso G2, vaga 34, perto do elevador"
+          [value]="vaga.observacao ?? ''"
+          (ionChange)="salvarObservacao($event.detail.value)"
+        ></ion-textarea>
+      </div>
+
+      <button class="botao-grande" (click)="guiar()">
+        <ion-icon name="navigate"></ion-icon>
+        <span>Me leve até o carro</span>
+      </button>
+
+      <ion-button expand="block" fill="outline" (click)="abrirMaps()">
+        <ion-icon slot="start" name="map-outline"></ion-icon>
+        Rota a pé no Google Maps
+      </ion-button>
+
+      <div class="acoes">
+        <ion-button fill="clear" size="small" (click)="remarcar()" [disabled]="marcando()">
+          <ion-icon slot="start" name="refresh-outline"></ion-icon>
+          Marcar de novo
+        </ion-button>
+        <ion-button fill="clear" size="small" color="danger" (click)="liberar()">Já peguei o carro</ion-button>
+      </div>
+    </section>
+  } @else {
+    <section class="vazio">
+      <p class="dica">Acabou de estacionar?</p>
+      <button class="botao-grande redondo" (click)="marcar()" [disabled]="marcando()">
+        @if (marcando()) {
+          <ion-spinner name="crescent"></ion-spinner>
+          <span>Localizando…</span>
+          @if (precisaoAtual() !== null) {
+            <small>precisão ±{{ precisaoAtual() }} m</small>
+          }
+        } @else {
+          <ion-icon name="location"></ion-icon>
+          <span>Marcar minha vaga</span>
+        }
+      </button>
+      <p class="nota">
+        Em garagens cobertas o GPS perde precisão. Depois de marcar, anote o piso e o número da vaga.
+      </p>
+    </section>
+  }
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <app-rodape-empresa compacto></app-rodape-empresa>
+</ion-footer>

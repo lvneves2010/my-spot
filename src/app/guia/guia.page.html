@@ -1,0 +1,62 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Voltando ao carro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <section class="guia">
+    @if (erro(); as mensagem) {
+      <div class="estado">
+        <ion-icon name="warning-outline" color="danger"></ion-icon>
+        <p>{{ mensagem }}</p>
+        <ion-button (click)="tentarDeNovo()">Tentar de novo</ion-button>
+      </div>
+    } @else if (!leitura()) {
+      <div class="estado">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Procurando sinal de GPS…</p>
+      </div>
+    } @else if (chegou()) {
+      <div class="estado chegou">
+        <ion-icon name="checkmark-circle" color="success"></ion-icon>
+        <h2>Você chegou!</h2>
+        <p>O carro deve estar a uns {{ distanciaTexto() }} daqui. Olhe em volta.</p>
+        <button class="botao-grande" (click)="peguei()">Já peguei o carro</button>
+      </div>
+    } @else {
+      <div class="mostrador" [class.norte]="direcaoUsuario() === null">
+        @if (direcaoUsuario() === null) {
+          <span class="marca-norte">N</span>
+        }
+        <svg class="seta" viewBox="0 0 100 100" [style.transform]="'rotate(' + rotacao() + 'deg)'" aria-hidden="true">
+          <path d="M50 6 L82 88 L50 70 L18 88 Z" />
+        </svg>
+      </div>
+      <div class="distancia">{{ distanciaTexto() }}</div>
+      <div class="instrucao">{{ instrucao() }}</div>
+      <div class="status">
+        GPS ±{{ precisao() }} m
+        @if (semBussola()) {
+          · sem bússola: a seta usa a direção em que você anda
+        }
+      </div>
+    }
+
+    @if (vaga()?.observacao; as observacao) {
+      <div class="observacao">{{ observacao }}</div>
+    }
+
+    <ion-button expand="block" fill="outline" (click)="abrirMaps()">
+      <ion-icon slot="start" name="map-outline"></ion-icon>
+      Rota a pé no Google Maps
+    </ion-button>
+  </section>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <app-rodape-empresa compacto></app-rodape-empresa>
+</ion-footer>

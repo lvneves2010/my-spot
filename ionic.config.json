@@ -1,0 +1,7 @@
+{
+  "name": "My Spot",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

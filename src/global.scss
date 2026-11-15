@@ -1,0 +1,95 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* Banner do AdMob: é nativo e fica por cima da WebView, então o app sobe
+   a altura dele (gravada em --altura-anuncio pelo AnunciosService). */
+html.com-anuncio ion-app {
+	margin-bottom: calc(
+		var(--altura-anuncio, 0px) + var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px))
+	);
+}
+
+/* Botão principal (marcar a vaga / me leve até o carro): grande, fácil de
+   acertar com uma mão e com o celular em movimento. */
+.botao-grande {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	width: 100%;
+	min-height: 88px;
+	padding: 16px;
+	border: 0;
+	border-radius: 20px;
+	background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
+	color: #ffffff;
+	font: inherit;
+	font-size: 20px;
+	font-weight: 700;
+	box-shadow: 0 10px 24px rgba(15, 118, 110, 0.35);
+	transition: transform 0.1s ease;
+
+	&:active {
+		transform: scale(0.97);
+	}
+
+	&:disabled {
+		opacity: 0.8;
+	}
+
+	ion-icon {
+		font-size: 36px;
+	}
+
+	ion-spinner {
+		color: #ffffff;
+	}
+
+	small {
+		font-size: 13px;
+		font-weight: 500;
+		opacity: 0.9;
+	}
+
+	&.redondo {
+		width: min(68vw, 240px);
+		aspect-ratio: 1;
+		border-radius: 50%;
+	}
+}
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import '@ionic/angular/css/palettes/dark.system.css';

@@ -1,0 +1,48 @@
+ion-content {
+  --background: linear-gradient(180deg, #0d1b2a 0%, #10283a 100%);
+}
+
+.abertura {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 0 16px env(safe-area-inset-bottom);
+  text-align: center;
+}
+
+.espaco {
+  flex: 1;
+
+  &.grande {
+    flex: 3;
+  }
+}
+
+.icone {
+  width: 160px;
+  height: 160px;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+}
+
+h1 {
+  margin: 24px 0 0;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.lema {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: #9be7d5;
+}
+
+ion-spinner {
+  color: #2dd4bf;
+}
+
+app-rodape-empresa {
+  --ion-color-medium: #d3efe8;
+}

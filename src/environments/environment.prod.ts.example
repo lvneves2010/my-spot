@@ -1,0 +1,11 @@
+// Copie este arquivo para "environment.prod.ts" (mesma pasta) e preencha o ID real.
+// "environment.prod.ts" está no .gitignore e nunca deve ser commitado.
+
+export const environment = {
+  production: true,
+  /**
+   * ID do bloco de anúncio (banner) real do AdMob, ex.: 'ca-app-pub-XXXX/YYYY'.
+   * Vazio = usa o ID de teste do Google. Preencha antes do build da Play Store.
+   */
+  admobBannerAndroid: '',
+};

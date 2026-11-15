@@ -1,0 +1,16 @@
+{
+  "name": "My Spot — onde estacionei?",
+  "short_name": "My Spot",
+  "description": "Marque com o GPS onde você estacionou e seja guiado de volta até o carro.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0d1b2a",
+  "theme_color": "#0f9f8f",
+  "icons": [
+    {
+      "src": "assets/icon/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

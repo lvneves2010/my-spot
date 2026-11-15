@@ -1,0 +1,8 @@
+// Copie este arquivo para "environment.ts" (mesma pasta).
+// "environment.ts" está no .gitignore e nunca deve ser commitado.
+
+export const environment = {
+  production: false,
+  /** Em desenvolvimento os anúncios usam sempre o ID de teste do Google. */
+  admobBannerAndroid: '',
+};
