@@ -45,7 +45,7 @@ Fonte única: `"version"` do `package.json`. O rodapé lê de lá e o `android/a
 
 - Fonte: `src/assets/icon/favicon.svg` (pino de mapa verde-azulado com "P" sobre fundo #0d1b2a) e `favicon-foreground.svg` (camada da frente do ícone adaptativo).
 - `npm run generate:icons` gera os mipmaps, o ícone adaptativo, as imagens de splash nativas e o ícone da Play Store (`store/icone_playstore_512.png`). Depois rode `npx cap sync android`.
-- O logo HSI não é o ícone do app. Ele aparece só no rodapé (`src/assets/logo_hsi.png`).
+- O logo HSI não é o ícone do app. Ele aparece só no rodapé (`src/assets/logo_hsi.png`). Desde 2026-11-15 é o logo novo da HSI, só a esfera (sem o texto "HSI", ilegível nesse tamanho), exportado em 128 px de `hsi-site/public/logo-hsi-mark.svg` (pasta irmã; ver `hsi-site/scripts/gerar_logo.py`).
 
 ## Comandos
 
