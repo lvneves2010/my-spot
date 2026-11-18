@@ -1,6 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
+import { FotoService } from './foto.service';
 import { Coordenada } from './geo';
+import { RuasService } from './ruas.service';
 
 /** Lugar onde o carro ficou. */
 export interface Vaga extends Coordenada {
@@ -10,6 +12,8 @@ export interface Vaga extends Coordenada {
   marcadaEm: string;
   /** Anotação livre: "Piso G2, vaga 34, perto do elevador". */
   observacao?: string;
+  /** Foto da vaga: URI do arquivo na pasta do app (ou data URL no navegador). */
+  foto?: string;
 }
 
 const CHAVE = 'myspot:vaga';
@@ -21,6 +25,8 @@ const CHAVE = 'myspot:vaga';
  */
 @Injectable({ providedIn: 'root' })
 export class VagaService {
+  private fotos = inject(FotoService);
+  private ruas = inject(RuasService);
   private readonly _vaga = signal<Vaga | null>(null);
   readonly vaga = this._vaga.asReadonly();
 
@@ -41,8 +47,22 @@ export class VagaService {
   }
 
   async salvar(vaga: Vaga): Promise<void> {
+    const fotoAnterior = this._vaga()?.foto;
     this._vaga.set(vaga);
     await Preferences.set({ key: CHAVE, value: JSON.stringify(vaga) });
+    if (fotoAnterior && fotoAnterior !== vaga.foto) {
+      await this.fotos.apagar(fotoAnterior);
+    }
+  }
+
+  /** Troca (ou põe) a foto da vaga atual; a anterior é apagada. */
+  async definirFoto(foto: string | undefined): Promise<void> {
+    const atual = this._vaga();
+    if (atual) {
+      await this.salvar({ ...atual, foto });
+    } else {
+      await this.fotos.apagar(foto);
+    }
   }
 
   async atualizarObservacao(observacao: string): Promise<void> {
@@ -53,7 +73,10 @@ export class VagaService {
   }
 
   async liberar(): Promise<void> {
+    const foto = this._vaga()?.foto;
     this._vaga.set(null);
     await Preferences.remove({ key: CHAVE });
+    await this.fotos.apagar(foto);
+    await this.ruas.esquecer();
   }
 }

@@ -92,3 +92,12 @@
   background: var(--ion-color-step-50, rgba(127, 127, 127, 0.08));
   white-space: pre-wrap;
 }
+
+ion-segment {
+  max-width: 280px;
+}
+
+.botao-peguei {
+  min-height: 64px;
+  font-size: 18px;
+}

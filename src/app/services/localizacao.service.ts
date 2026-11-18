@@ -19,7 +19,17 @@ const PRECISAO_BOA_M = 10;
 /** Tempo máximo esperando o GPS melhorar ao marcar a vaga. */
 const ESPERA_MAXIMA_MS = 15_000;
 
-const OPCOES = { enableHighAccuracy: true, timeout: 30_000, maximumAge: 0 };
+/**
+ * `interval` e `minimumUpdateInterval` só valem no Android. Sem `interval`, o
+ * plugin usa o `timeout` como intervalo, e o GPS só atualizava a cada 30 s.
+ */
+const OPCOES = {
+  enableHighAccuracy: true,
+  timeout: 30_000,
+  maximumAge: 0,
+  interval: 1000,
+  minimumUpdateInterval: 500,
+};
 
 @Injectable({ providedIn: 'root' })
 export class LocalizacaoService {

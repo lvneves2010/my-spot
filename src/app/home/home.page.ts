@@ -16,11 +16,23 @@ import {
   ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { carSport, location, mapOutline, navigate, refreshOutline, shieldCheckmarkOutline } from 'ionicons/icons';
+import {
+  cameraOutline,
+  carSport,
+  location,
+  mapOutline,
+  navigate,
+  refreshOutline,
+  shieldCheckmarkOutline,
+  trashOutline,
+} from 'ionicons/icons';
 import { Haptics, NotificationType } from '@capacitor/haptics';
+import { FotoVagaComponent } from '../compartilhado/foto-vaga/foto-vaga.component';
 import { RodapeEmpresaComponent } from '../compartilhado/rodape-empresa/rodape-empresa.component';
 import { AnunciosService } from '../services/anuncios.service';
+import { FotoService } from '../services/foto.service';
 import { LocalizacaoService } from '../services/localizacao.service';
+import { RuasService } from '../services/ruas.service';
 import { VagaService } from '../services/vaga.service';
 import { abrirRotaNoMaps } from '../services/mapas';
 
@@ -41,6 +53,7 @@ import { abrirRotaNoMaps } from '../services/mapas';
     IonSpinner,
     IonTextarea,
     RodapeEmpresaComponent,
+    FotoVagaComponent,
   ],
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
@@ -48,6 +61,8 @@ import { abrirRotaNoMaps } from '../services/mapas';
 export class HomePage implements OnInit, OnDestroy {
   private vagas = inject(VagaService);
   private localizacao = inject(LocalizacaoService);
+  private fotos = inject(FotoService);
+  private ruas = inject(RuasService);
   private anuncios = inject(AnunciosService);
   private alertas = inject(AlertController);
   private toasts = inject(ToastController);
@@ -57,6 +72,7 @@ export class HomePage implements OnInit, OnDestroy {
   readonly precisaOpcoesPrivacidade$ = this.anuncios.precisaOpcoesPrivacidade$;
 
   readonly marcando = signal(false);
+  readonly fotografando = signal(false);
   /** Precisão da melhor leitura enquanto marca (metros). */
   readonly precisaoAtual = signal<number | null>(null);
 
@@ -81,7 +97,7 @@ export class HomePage implements OnInit, OnDestroy {
   });
 
   constructor() {
-    addIcons({ carSport, location, mapOutline, navigate, refreshOutline, shieldCheckmarkOutline });
+    addIcons({ cameraOutline, carSport, location, mapOutline, navigate, refreshOutline, shieldCheckmarkOutline, trashOutline });
   }
 
   ngOnInit() {
@@ -115,11 +131,16 @@ export class HomePage implements OnInit, OnDestroy {
         precisao: Math.round(leitura.precisao),
         marcadaEm: new Date().toISOString(),
       });
+      // Baixa já as ruas em volta (ainda com sinal), para o mapa do guia funcionar mesmo sem internet.
+      this.ruas
+        .esquecer()
+        .then(() => this.ruas.preparar(leitura))
+        .catch(err => console.warn('Ruas não baixadas agora; o guia tenta de novo', err));
       Haptics.notification({ type: NotificationType.Success }).catch(() => {});
       this.avisar(
         leitura.precisao > 30
           ? 'Vaga marcada, mas o sinal do GPS estava fraco. Anote o piso e a vaga.'
-          : 'Vaga marcada! Pode ir tranquilo.'
+          : 'Vaga marcada! Se quiser, tire uma foto da vaga.'
       );
     } catch (err) {
       this.avisar(LocalizacaoService.mensagemDeErro(err), 'danger');
@@ -137,6 +158,31 @@ export class HomePage implements OnInit, OnDestroy {
   async liberar() {
     if (await this.confirmar('Já pegou o carro?', 'A vaga marcada será apagada.', 'Apagar')) {
       await this.vagas.liberar();
+    }
+  }
+
+  async tirarFoto() {
+    if (this.fotografando()) {
+      return;
+    }
+    this.fotografando.set(true);
+    try {
+      const foto = await this.fotos.tirar();
+      if (foto) {
+        await this.vagas.definirFoto(foto);
+        this.avisar('Foto da vaga salva.');
+      }
+    } catch (err) {
+      console.warn('Foto da vaga', err);
+      this.avisar('Não foi possível tirar a foto.', 'danger');
+    } finally {
+      this.fotografando.set(false);
+    }
+  }
+
+  async removerFoto() {
+    if (await this.confirmar('Remover a foto?', 'A foto da vaga será apagada.', 'Remover')) {
+      await this.vagas.definirFoto(undefined);
     }
   }
 
