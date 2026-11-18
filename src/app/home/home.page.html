@@ -32,6 +32,25 @@
           [value]="vaga.observacao ?? ''"
           (ionChange)="salvarObservacao($event.detail.value)"
         ></ion-textarea>
+
+        @if (vaga.foto; as foto) {
+          <app-foto-vaga class="foto" [foto]="foto"></app-foto-vaga>
+          <div class="acoes-foto">
+            <ion-button fill="clear" size="small" (click)="tirarFoto()" [disabled]="fotografando()">
+              <ion-icon slot="start" name="camera-outline"></ion-icon>
+              Trocar foto
+            </ion-button>
+            <ion-button fill="clear" size="small" color="medium" (click)="removerFoto()">
+              <ion-icon slot="start" name="trash-outline"></ion-icon>
+              Remover
+            </ion-button>
+          </div>
+        } @else {
+          <ion-button class="botao-foto" expand="block" fill="outline" (click)="tirarFoto()" [disabled]="fotografando()">
+            <ion-icon slot="start" name="camera-outline"></ion-icon>
+            Tirar foto da vaga
+          </ion-button>
+        }
       </div>
 
       <button class="botao-grande" (click)="guiar()">

@@ -1,6 +1,6 @@
 {
   "name": "my-spot",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "author": "Help Soluções em Informática (HSI)",
   "description": "My Spot: marca com o GPS onde você estacionou e guia você de volta até o carro",
   "scripts": {
@@ -26,12 +26,16 @@
     "@capacitor-community/admob": "^8.3.0",
     "@capacitor/android": "^8.6.2",
     "@capacitor/app-launcher": "^8.0.1",
+    "@capacitor/camera": "^8.2.6",
     "@capacitor/core": "^8.6.2",
+    "@capacitor/filesystem": "^8.1.5",
     "@capacitor/geolocation": "^8.2.4",
     "@capacitor/haptics": "^8.0.2",
     "@capacitor/preferences": "^8.0.1",
     "@ionic/angular": "^8.0.0",
+    "@mapbox/vector-tile": "^2.0.5",
     "ionicons": "^7.0.0",
+    "pbf": "^4.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

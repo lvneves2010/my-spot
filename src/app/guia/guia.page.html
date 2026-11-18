@@ -4,6 +4,9 @@
       <ion-back-button defaultHref="/home" text=""></ion-back-button>
     </ion-buttons>
     <ion-title>Voltando ao carro</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="peguei()">Peguei</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -20,34 +23,81 @@
         <ion-spinner name="crescent"></ion-spinner>
         <p>Procurando sinal de GPS…</p>
       </div>
-    } @else if (chegou()) {
+    } @else if (naChegada()) {
       <div class="estado chegou">
         <ion-icon name="checkmark-circle" color="success"></ion-icon>
         <h2>Você chegou!</h2>
-        <p>O carro deve estar a uns {{ distanciaTexto() }} daqui. Olhe em volta.</p>
+        @if (dirigindo()) {
+          <p>Parece que você já está dirigindo. Libere a vaga quando puder.</p>
+        } @else {
+          <p>O carro deve estar a uns {{ distanciaTexto() }} daqui. Olhe em volta.</p>
+        }
+        @if (vaga()?.foto; as foto) {
+          <app-foto-vaga class="foto-chegada" [foto]="foto"></app-foto-vaga>
+        }
         <button class="botao-grande" (click)="peguei()">Já peguei o carro</button>
+        <ion-button fill="clear" size="small" (click)="continuarProcurando()">Ainda não achei, continuar</ion-button>
       </div>
     } @else {
-      <div class="mostrador" [class.norte]="direcaoUsuario() === null">
-        @if (direcaoUsuario() === null) {
-          <span class="marca-norte">N</span>
-        }
-        <svg class="seta" viewBox="0 0 100 100" [style.transform]="'rotate(' + rotacao() + 'deg)'" aria-hidden="true">
-          <path d="M50 6 L82 88 L50 70 L18 88 Z" />
-        </svg>
-      </div>
+      <ion-segment [value]="escolha()" (ionChange)="mudarEscolha($event.detail.value)">
+        <ion-segment-button value="auto">
+          <ion-icon name="sparkles-outline"></ion-icon>
+          <ion-label>Auto</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="mapa">
+          <ion-icon name="map-outline"></ion-icon>
+          <ion-label>Mapa</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="bussola">
+          <ion-icon name="compass-outline"></ion-icon>
+          <ion-label>Seta</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      @if (vista() === 'mapa') {
+        <app-croqui
+          [vaga]="vaga()!"
+          [usuario]="leitura()"
+          [direcao]="direcaoUsuario()"
+          [rotacao]="rotacaoMapa()"
+          [ruas]="ruas()"
+          [rota]="rota()?.pontos ?? null"
+          [aviso]="avisoRuas()"
+        ></app-croqui>
+      } @else {
+        <div class="mostrador" [class.norte]="direcaoUsuario() === null">
+          @if (direcaoUsuario() === null) {
+            <span class="marca-norte">N</span>
+          }
+          <svg class="seta" viewBox="0 0 100 100" [style.transform]="'rotate(' + rotacao() + 'deg)'" aria-hidden="true">
+            <path d="M50 6 L82 88 L50 70 L18 88 Z" />
+          </svg>
+        </div>
+      }
       <div class="distancia">{{ distanciaTexto() }}</div>
-      <div class="instrucao">{{ instrucao() }}</div>
+      @if (vista() === 'mapa' && rota()) {
+        <div class="instrucao">Siga a linha verde pelas ruas</div>
+        <div class="status">{{ rotaTexto() }}</div>
+      } @else {
+        <div class="instrucao">{{ instrucao() }}</div>
+      }
+      @if (perto()) {
+        <button class="botao-grande botao-peguei" (click)="peguei()">Cheguei, já peguei o carro</button>
+      }
       <div class="status">
         GPS ±{{ precisao() }} m
         @if (semBussola()) {
-          · sem bússola: a seta usa a direção em que você anda
+          · sem bússola: a direção vem do seu deslocamento
         }
       </div>
     }
 
     @if (vaga()?.observacao; as observacao) {
       <div class="observacao">{{ observacao }}</div>
+    }
+
+    @if (!naChegada() && vaga()?.foto; as foto) {
+      <app-foto-vaga class="foto-guia" [foto]="foto"></app-foto-vaga>
     }
 
     <ion-button expand="block" fill="outline" (click)="abrirMaps()">
